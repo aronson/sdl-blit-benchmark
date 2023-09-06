@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.5)
+project(white_noise)
+find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
+add_executable(white_noise white_noise.c)
+target_link_libraries(white_noise PRIVATE SDL3::SDL3)
