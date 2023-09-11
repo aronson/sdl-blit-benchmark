@@ -3,8 +3,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-const uint32_t simd_result[4] = {0x148e9ddb, 0x9d5b220b, 0xeaf4d5a5, 0x26c5dc37};
+const uint32_t x86_simd_result[4] = {0x148e9ddb, 0x9d5b220b, 0xeaf4d5a5, 0x26c5dc37};
 const uint32_t classic_result[4] = {0xb300df09, 0xb81c0646, 0xd5faeb50, 0x7897fc07};
+const uint32_t arm_simd_result[4] = {0x1d4b201e, 0xbe5a43c1, 0x67649206, 0x861ea07d};
 
 uint64_t rotl(uint64_t x, int k) { return (x << k) | (x >> (-k & 63)); }
 uint64_t next(uint64_t state[2]) {
@@ -170,9 +171,11 @@ int testRandomToRandomSVGAMultipleIterations() {
     printf("Random to Random SVGA blit: %x, %x, %x, %x\n", out[0], out[1], out[2], out[3]);
 
     SDL_DestroySurface(destSurface);
-    const int passes_x86_simd = out[0] == simd_result[0] && out[1] == simd_result[1] &&
-            out[2] == simd_result[2] && out[3] == simd_result[3];
+    const int passes_x86_simd = out[0] == x86_simd_result[0] && out[1] == x86_simd_result[1] &&
+                                out[2] == x86_simd_result[2] && out[3] == x86_simd_result[3];
     const int passes_x86_classic = out[0] == classic_result[0] && out[1] == classic_result[1] &&
             out[2] == classic_result[2] && out[3] == classic_result[3];
-    return passes_x86_simd || passes_x86_classic;
+    const int passes_arm_simd = out[0] == arm_simd_result[0] && out[1] == arm_simd_result[1] &&
+                                   out[2] == arm_simd_result[2] && out[3] == arm_simd_result[3];
+    return passes_x86_simd || passes_x86_classic || passes_arm_simd;
 }
