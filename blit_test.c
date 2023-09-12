@@ -73,7 +73,8 @@ int main(int argc, char* argv[]) {
 int testRandomToRandomSVGA() {
     const int width = 800;
     const int height = 600;
-    const Uint32 good_hash = 0xfc3eb115;
+    const Uint32 scalar_hash = 0x1f56efad;
+    const Uint32 x86_simd_hash = 0x42140c5f;
     // Reset RNG
     resetRngStream();
     // Allocate random buffers
@@ -83,8 +84,7 @@ int testRandomToRandomSVGA() {
     SDL_Surface* dest_surface = getRandomSVGASurface(dest_pixels, SDL_PIXELFORMAT_BGRA8888);
     SDL_Surface* src_surface = getRandomSVGASurface(src_pixels, SDL_PIXELFORMAT_RGBA8888);
     // Blit surfaces
-    SDL_Rect dest_rect;
-    SDL_BlitSurface(src_surface, NULL, dest_surface, &dest_rect);
+    SDL_BlitSurface(src_surface, NULL, dest_surface, NULL);
     // Check result
     Uint32 hash = hashSurfacePixels(dest_surface);
     printf("Random to Random SVGA blit single iteration: 0x%x... ", hash);
@@ -93,7 +93,7 @@ int testRandomToRandomSVGA() {
     SDL_DestroySurface(src_surface);
     SDL_free(dest_pixels);
     SDL_free(src_pixels);
-    const int result = hash == good_hash;
+    const int result = hash == x86_simd_hash || hash == scalar_hash;
     if (result) {
         printf("passed!\n");
     } else {
